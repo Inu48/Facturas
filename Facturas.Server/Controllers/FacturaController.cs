@@ -29,18 +29,17 @@ namespace Facturas.Server.Controllers
         [Route("Filtro")]
         public async Task<IActionResult> Filtro(DateTime fechaInicio, DateTime fechaFin)
         {
-            
-                List<Factura> ordenes = await _dbPruebaContext.Facturas
-                    .Where(o => o.FechaRegistro >= fechaInicio && o.FechaRegistro <= fechaFin)
-                    .Join(_dbPruebaContext.Clientes,
-                          orden => orden.IdCliente,
-                          cliente => cliente.IdCliente,
-                          (orden, cliente) => new { orden, cliente })
-                    .Select(x => x.orden)
-                    .ToListAsync();
+            List<Factura> ordenes = await _dbPruebaContext.Facturas
+                .Where(o => o.FechaRegistro >= fechaInicio && o.FechaRegistro <= fechaFin)
+                .Include(o => o.IdClienteNavigation)
+                .ToListAsync();
 
-                return StatusCode(StatusCodes.Status200OK, ordenes); 
-            
+            if (ordenes == null || ordenes.Count == 0)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, "No se encontraron registros.");
+            }
+
+            return StatusCode(StatusCodes.Status200OK, ordenes);
         }
 
         [HttpPost]
@@ -60,7 +59,7 @@ namespace Facturas.Server.Controllers
             await _dbPruebaContext.Facturas.AddAsync(factura);
             await _dbPruebaContext.SaveChangesAsync();
 
-            return StatusCode(StatusCodes.Status200OK, "ok");
+            return StatusCode(StatusCodes.Status201Created, "ok");
         }
     }
 }

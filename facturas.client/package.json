@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "reactstrap": "^9.2.3"
+    "reactstrap": "^9.2.3",
+    "sweetalert2": "^11.16.0",
+    "sweetalert2-react-content": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
